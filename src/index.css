@@ -48,6 +48,9 @@ section{
 .cityDiv > div:last-of-type{
     grid-area: 3/1/4/3;
 }
+.icon{
+    width: 50px;
+}
 
 #rightSide{
     display: grid;
@@ -76,4 +79,7 @@ section{
 .daysBox{
     width: 10%;
     height: 50%;
+}
+.dayIcon{
+    width: 40px;
 }
