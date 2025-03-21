@@ -26,4 +26,9 @@ async function handle(e) {
   let responseJson = api.getInfo(response) 
   const domManager = new DomManager(responseJson)
 }
+(async function init(){
+  let initResponse = await api.fetchApi('london')
+  let initResponseJson = api.getInfo(initResponse) 
+  const initDomManager = new DomManager(initResponseJson)
+}())
 //handle()

@@ -1,20 +1,64 @@
 import { format } from "date-fns";
+import { da } from "date-fns/locale";
 export default class DomManager{
     constructor(jsonResponse){
-        this.jsonResponse = jsonResponse
-        //this.daysTemplate= document.querySelector('#daysTemplate').content.cloneNode(true)
+        this.jsonResponse = jsonResponse//this.daysTemplate= document.querySelector('#daysTemplate').content.cloneNode(true)
+        this.body= document.querySelector('body')
         this.rightSide= document.querySelector('#rightSide')
         this.cityDiv= document.querySelector('#cityDiv')
         this.daysSection= document.querySelector('#days')
         this.unitGroupBtn = document.querySelector('.unitGroupBtn')
+
         this.init()
     }
     init(){
         this.renderLeftSide()
         this.renderRightSide()
         this.renderDays()
+        this.change()
         this.unitGroupBtn.addEventListener('click', this.changeUnitGroup)
     } 
+    change(){
+        console.log('idk')
+        let conditionType= ''
+        let lastConditionType= ''
+        const datetime= this.jsonResponse.datetime
+        const sunset= this.jsonResponse.sunset
+        const sunrise= this.jsonResponse.sunrise
+        // if(this.jsonResponse.icon.includes('day')){
+        //     lastConditionType= 'night'
+        //     conditionType= 'sunny'
+        // }else if(this.jsonResponse.icon.includes('night')){
+        //     lastConditionType= 'sunny'
+        //     conditionType= 'night'
+        // }
+        if(datetime > sunrise && datetime < sunset && datetime != '0:00:00'){
+            lastConditionType= 'night'
+            conditionType= 'sunny'
+        }else {
+            lastConditionType= 'sunny'
+            conditionType= 'night'
+        }
+        console.log(conditionType)
+        this.stylePage(conditionType, lastConditionType)
+    }
+    stylePage(conditionType, lastConditionType){
+        let litteBoxes = document.querySelectorAll('.littleBoxes')
+        let daysBoxes = document.querySelectorAll('.daysBox')
+        
+        this.body.classList.remove(lastConditionType+'_bg')
+        this.body.classList.add(conditionType+'_bg')
+
+        daysBoxes.forEach((box)=>{
+            box.classList.remove(lastConditionType+'_boxes')
+            box.classList.add(conditionType+'_boxes')
+        })
+        litteBoxes.forEach((boxes)=>{
+
+            boxes.classList.remove(lastConditionType+'_boxes')
+            boxes.classList.add(conditionType+'_boxes')
+        })
+    }
     renderRightSide(){
         const humidity = document.querySelector('.humidity')
         const windspeed = document.querySelector('.windspeed')
