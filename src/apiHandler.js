@@ -7,33 +7,20 @@ export default class apiHandler{
     }
     async fetchApi(address){
         try {
-            // const response= await fetch(`${this.URL}${address}?unitGroup=${this.UNITGROUP}&key=${this.KEY}&contentType=json`, {
-            // "method": "GET",
-            // "headers": {
-            // }
-            // })
-            // const responseJson= await response.json()
-            // console.log(address)
-            // console.log(test)
-            // return responseJson
-           return test
+            const response= await fetch(`${this.URL}${address}?unitGroup=${this.UNITGROUP}&key=${this.KEY}&contentType=json`, {
+            "method": "GET",
+            "headers": {
+            }
+            })
+            const responseJson= await response.json()
+            console.log(address)
+            console.log(test)
+            return responseJson
+           //return test
         } catch (error) {
             console.log(error)
         }
     }
-    // changeUnitGroup(){
-    //     let tempFarenheit = (response.currentConditions.temp - 32) * 5/9 
-
-    //     // if(this.UNITGROUP == 'metric'){
-    //     //     this.UNITGROUP = 'us'
-    //     //     this.tempType= '°C'
-    //     // }else{
-    //     //     this.UNITGROUP = 'metric'  
-    //     //     this.tempType= '°F'  
-    //     // }
-        
-    //     console.log(tempFarenheit)
-    // }
     getInfo(response){
         console.log(response)
         const info={
@@ -44,8 +31,8 @@ export default class apiHandler{
           tempType:'°C',
           feelslike:response.currentConditions.feelslike,
           humidity:response.currentConditions.humidity,
-          windspeed:response.currentConditions.windspeed,
-          pressure:response.currentConditions.pressure,
+          windspeed:`${response.currentConditions.windspeed} km/h`,
+          cloudcover:`${response.currentConditions.cloudcover}%`,
           datetime:response.currentConditions.datetime,
           sunrise:response.currentConditions.sunrise,
           sunset:response.currentConditions.sunset,

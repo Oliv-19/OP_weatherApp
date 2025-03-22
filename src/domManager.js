@@ -1,8 +1,7 @@
 import { format } from "date-fns";
-import { da } from "date-fns/locale";
 export default class DomManager{
     constructor(jsonResponse){
-        this.jsonResponse = jsonResponse//this.daysTemplate= document.querySelector('#daysTemplate').content.cloneNode(true)
+        this.jsonResponse = jsonResponse
         this.body= document.querySelector('body')
         this.rightSide= document.querySelector('#rightSide')
         this.cityDiv= document.querySelector('#cityDiv')
@@ -19,19 +18,12 @@ export default class DomManager{
         this.unitGroupBtn.addEventListener('click', this.changeUnitGroup)
     } 
     change(){
-        console.log('idk')
         let conditionType= ''
         let lastConditionType= ''
         const datetime= this.jsonResponse.datetime
         const sunset= this.jsonResponse.sunset
         const sunrise= this.jsonResponse.sunrise
-        // if(this.jsonResponse.icon.includes('day')){
-        //     lastConditionType= 'night'
-        //     conditionType= 'sunny'
-        // }else if(this.jsonResponse.icon.includes('night')){
-        //     lastConditionType= 'sunny'
-        //     conditionType= 'night'
-        // }
+
         if(datetime > sunrise && datetime < sunset && datetime != '0:00:00'){
             lastConditionType= 'night'
             conditionType= 'sunny'
@@ -39,15 +31,18 @@ export default class DomManager{
             lastConditionType= 'sunny'
             conditionType= 'night'
         }
-        console.log(conditionType)
         this.stylePage(conditionType, lastConditionType)
     }
     stylePage(conditionType, lastConditionType){
         let litteBoxes = document.querySelectorAll('.littleBoxes')
         let daysBoxes = document.querySelectorAll('.daysBox')
+        let cityNameWrapper = document.querySelector('.cityNameWrapper')
         
         this.body.classList.remove(lastConditionType+'_bg')
         this.body.classList.add(conditionType+'_bg')
+
+        cityNameWrapper.classList.remove(lastConditionType+'_title')
+        cityNameWrapper.classList.add(conditionType+'_title')
 
         daysBoxes.forEach((box)=>{
             box.classList.remove(lastConditionType+'_boxes')
@@ -62,14 +57,14 @@ export default class DomManager{
     renderRightSide(){
         const humidity = document.querySelector('.humidity')
         const windspeed = document.querySelector('.windspeed')
-        const pressure = document.querySelector('.pressure')
+        const cloudcover = document.querySelector('.cloudcover')
         const datetime = document.querySelector('.datetime')
         const sunrise = document.querySelector('.sunrise')
         const sunset = document.querySelector('.sunset')
 
         humidity.textContent= this.jsonResponse.humidity
         windspeed.textContent= this.jsonResponse.windspeed
-        pressure.textContent= this.jsonResponse.pressure
+        cloudcover.textContent= this.jsonResponse.cloudcover
         datetime.textContent= this.jsonResponse.datetime
         sunrise.textContent= this.jsonResponse.sunrise
         sunset.textContent= this.jsonResponse.sunset
@@ -107,29 +102,43 @@ export default class DomManager{
             this.daysSection.append(daysTemplate)
         } 
     }
-    calcCelsius(temperature){
-        return ((temperature - 32) * 5/9).toFixed(2)
-    }
     calcFarenheit (temperature){
-        return ((temperature * 9/5) + 32 ).toFixed(2)
+        return ((temperature * 9/5) + 32 ).toFixed(1)
     }
     changeUnitGroup=()=>{
+        const tempElem = document.querySelector('.temp')
+        const feelsLikeElem = document.querySelector('.feelsLike')
+        const daysTemp = document.querySelectorAll('.dayTemp')
+        let temp= this.jsonResponse.temp
+        let feelsLike= this.jsonResponse.feelslike
+        
         if(this.jsonResponse.tempType =='°C'){
-            this.jsonResponse.temp = this.calcFarenheit(this.jsonResponse.temp)
-            this.jsonResponse.feelslike = this.calcFarenheit(this.jsonResponse.feelslike)
-            this.jsonResponse.days.forEach(day => {
-                day.temp= this.calcFarenheit(day.temp)
-            });
             this.jsonResponse.tempType = '°F'  
-        }else{
-            this.jsonResponse.temp = this.calcCelsius(this.jsonResponse.temp)
-            this.jsonResponse.feelslike = this.calcCelsius(this.jsonResponse.feelslike)
-            this.jsonResponse.days.forEach(day => {
-                day.temp= this.calcCelsius(day.temp)
+            this.unitGroupBtn.textContent = '°C'
+
+            let farenheitTemp= this.calcFarenheit(temp)
+            let farenheitFeelslike= this.calcFarenheit(feelsLike)
+
+            tempElem.textContent= `${farenheitTemp} ${this.jsonResponse.tempType}`
+            feelsLikeElem.textContent= `${farenheitFeelslike} ${this.jsonResponse.tempType}`
+            
+            daysTemp.forEach((dayElem,i) => {
+                let day= this.jsonResponse.days.at(i)
+                let dayTemp= this.calcFarenheit(day.temp)
+                dayElem.textContent= `${dayTemp} ${this.jsonResponse.tempType}`
             });
+        }else{
             this.jsonResponse.tempType = '°C'  
+            this.unitGroupBtn.textContent = '°F'
+
+            tempElem.textContent= `${temp} ${this.jsonResponse.tempType}`
+            feelsLikeElem.textContent= `${feelsLike} ${this.jsonResponse.tempType}`
+            
+            daysTemp.forEach((dayElem,i) => {
+                let day= this.jsonResponse.days.at(i)
+                dayElem.textContent= `${day.temp} ${this.jsonResponse.tempType}`
+            });
         }
-        this.renderLeftSide()
-        this.renderDays()
+       
     }
 }
