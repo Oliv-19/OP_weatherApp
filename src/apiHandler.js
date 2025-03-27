@@ -6,23 +6,18 @@ export default class apiHandler{
         this.KEY= 'K4CHNVB6V3MULBTF6PQ2AHQPD'
     }
     async fetchApi(address){
-        try {
-            const response= await fetch(`${this.URL}${address}?unitGroup=${this.UNITGROUP}&key=${this.KEY}&contentType=json`, {
-            "method": "GET",
-            "headers": {
-            }
-            })
-            const responseJson= await response.json()
-            console.log(address)
-            console.log(test)
-            return responseJson
-           //return test
-        } catch (error) {
-            console.log(error)
+        
+        const response= await fetch(`${this.URL}${address}?unitGroup=${this.UNITGROUP}&key=${this.KEY}&contentType=json`, {
+        "method": "GET",
+        "headers": {
         }
+        })
+        const responseJson= await response.json()
+        return responseJson
+        //return test
+        
     }
     getInfo(response){
-        console.log(response)
         const info={
           address:response.resolvedAddress,
           icon:`${response.currentConditions.icon}.png`,
@@ -38,7 +33,6 @@ export default class apiHandler{
           sunset:response.currentConditions.sunset,
           days:response.days,
         }
-        console.log(info)
         return info
       }
 }

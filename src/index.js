@@ -9,18 +9,26 @@ const formElem = document.querySelector('.searchForm')
 
 formElem.addEventListener('submit', handle)
 
+function apiError(error){
+  const input = document.querySelector('.input')
+  input.setCustomValidity(`${error} not found`);
+  input.reportValidity();
+}
+
 async function handle(e) {
-  try{
-    e.preventDefault();
-   
-  }catch{
-    console.log(e)
+  e.preventDefault()
+  let search = await form.handleSearch()
+  if(search != false){
+    let response = await api.fetchApi(search).then((res)=>{
+      let responseJson = api.getInfo(res) 
+      new DomManager(responseJson)
+
+    }).catch((error)=>{
+      console.log(error)
+      apiError(search)
+    })
   }
-  let search = form.handleSearch()
-    
-  let response = await api.fetchApi(search)
-  let responseJson = api.getInfo(response) 
-  new DomManager(responseJson)
+  
 }
 (async function init(){
   let initResponse = await api.fetchApi('london')

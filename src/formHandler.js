@@ -1,16 +1,25 @@
 export default class formHandler{
-    constructor(){
-        this.form = document.querySelector('.searchForm')
-        
+    idk(){
+        const input = document.querySelector('.input')
+        input.addEventListener('input', ()=>{
+            input.setCustomValidity('');
+            input.reportValidity();
+        })
     }
 
-    handleSearch(){
+    async handleSearch(){
+        const input = document.querySelector('.input')
+        let isAlphabetic = Array.from(input.value).every((char) =>
+            /[A-Za-z]/.test(char));
+
+        if(isAlphabetic){
+            this.idk()
+            return input.value
+        }
+        input.setCustomValidity("Enter a valid country");
+        input.reportValidity();
+        return false  
         
-        //e.preventDefault()
-        const formElem = document.querySelector('.searchForm')
-        const form= new FormData(formElem)
-        console.log(form.get('search'))
-        return form.get('search')
         
     }
 
