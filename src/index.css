@@ -213,7 +213,7 @@ section{
     font-size: 0.9em;
 }
 
-@media (max-width:500px) {
+@media only screen and (max-width:500px), only screen and (max-height:320px) {
     body{
         display: flex;
         flex-direction: column;
