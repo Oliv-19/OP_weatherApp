@@ -5,17 +5,25 @@ export default class apiHandler{
         this.UNITGROUP = 'metric'
         this.KEY= 'K4CHNVB6V3MULBTF6PQ2AHQPD'
     }
+    
     async fetchApi(address){
-        
-        const response= await fetch(`${this.URL}${address}?unitGroup=${this.UNITGROUP}&key=${this.KEY}&contentType=json`, {
-        "method": "GET",
-        "headers": {
+        try{
+            const response= await fetch(`${this.URL}${address}?unitGroup=${this.UNITGROUP}&key=${this.KEY}&contentType=json`, {
+                "method": "GET",
+                "headers": {
+                }
+            })
+            const responseJson= await response.json()
+            return responseJson
+        }catch(error){
+            this.apiError(address, error)
         }
-        })
-        const responseJson= await response.json()
-        return responseJson
-        //return test
         
+    }
+    apiError(address, error){
+        console.log(error)
+        const cityName  = document.querySelector('.cityName ')
+        cityName.textContent= `${address} not found`
     }
     getInfo(response){
         const info={

@@ -1,5 +1,5 @@
 export default class formHandler{
-    idk(){
+    resetCustomValidity(){
         const input = document.querySelector('.input')
         input.addEventListener('input', ()=>{
             input.setCustomValidity('');
@@ -7,16 +7,16 @@ export default class formHandler{
         })
     }
 
-    async handleSearch(){
+    handleSearch(){
         const input = document.querySelector('.input')
         let isAlphabetic = Array.from(input.value).every((char) =>
             /[A-Za-z]/.test(char));
 
         if(isAlphabetic){
-            this.idk()
+            this.resetCustomValidity()
             return input.value
         }
-        input.setCustomValidity("Enter a valid country");
+        input.setCustomValidity("Invalid search input.");
         input.reportValidity();
         return false  
         
