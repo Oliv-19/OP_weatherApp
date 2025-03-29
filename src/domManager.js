@@ -11,12 +11,47 @@ export default class DomManager{
         this.init()
     }
     init(){
+        this.renderSearchError()
         this.renderLeftSide()
         this.renderRightSide()
         this.renderDays()
         this.change()
         this.unitGroupBtn.addEventListener('click', this.changeUnitGroup)
     } 
+    static renderLoadingScreen(){
+        document.onreadystatechange = ()=>{
+            if(document.readyState !== 'complete' ){
+                document.querySelector("body").style.visibility = "hidden";
+                document.querySelector("#loader").style.visibility = "visible";
+            }else {
+                document.querySelector("#loader").style.display = "none";
+                document.querySelector("body").style.visibility = "visible";
+            }
+        }
+    }
+    renderSearchError(){
+        if(this.jsonResponse== null){
+            const nullObj= {
+                address:'Error: address not found',
+                icon:'clear-day.png',
+                conditions:'-',
+                temp:'-',
+                tempType:'°C',
+                feelslike:'-',
+                humidity:'-',
+                windspeed:'-',
+                cloudcover:'-',
+                datetime:'-',
+                sunrise:'-',
+                sunset:'-',
+                days:'-',
+            }
+            this.jsonResponse= nullObj
+            this.renderLeftSide()
+            this.renderRightSide()
+        }
+
+    }
     change(){
         let conditionType= ''
         let lastConditionType= ''
@@ -81,6 +116,7 @@ export default class DomManager{
         feelsLike.textContent= `${this.jsonResponse.feelslike} ${this.jsonResponse.tempType}`
         conditions.textContent= this.jsonResponse.conditions
         icon.src= './icons/'+ this.jsonResponse.icon
+        icon.alt= this.jsonResponse.icon
     }
     renderDays(){
         this.daysSection.textContent= ''

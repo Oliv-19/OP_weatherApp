@@ -16,14 +16,9 @@ export default class apiHandler{
             const responseJson= await response.json()
             return responseJson
         }catch(error){
-            this.apiError(address, error)
+            return 
         }
         
-    }
-    apiError(address, error){
-        console.log(error)
-        const cityName  = document.querySelector('.cityName ')
-        cityName.textContent= `${address} not found`
     }
     getInfo(response){
         const info={
